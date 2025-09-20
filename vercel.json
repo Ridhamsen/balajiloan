@@ -8,10 +8,11 @@
     }
   },
   "env": {
-    "NEXTAUTH_URL": "https://dhruv-nqai0cxht-balaji-loans-projects.vercel.app",
-    "NEXTAUTH_SECRET": "balaji-loan-secret-key-2024",
-    "OTP_SECRET": "otp-secret-key-2024",
+    "NEXTAUTH_URL": "https://www.balajiloan.com",
+    "NEXTAUTH_SECRET": "c2f72f3492416dcb6bf5d744b7c1d06ac40a057cebb7c875c4fa4ce884656cf7",
+    "OTP_SECRET": "c2f72f3492416dcb6bf5d744b7c1d06ac40a057cebb7c875c4fa4ce884656cf7",
     "APP_NAME": "Balaji Loan",
-    "APP_URL": "https://dhruv-nqai0cxht-balaji-loans-projects.vercel.app"
+    "APP_URL": "https://www.balajiloan.com",
+    "DATABASE_URL": "postgresql://dummy:dummy@dummy:5432/dummy"
   }
 }
