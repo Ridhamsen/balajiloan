@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 24.6 95% 53.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 24.6 95% 53.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom styles for Balaji Loan */
+.balaji-gradient {
+  background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+}
+
+.balaji-orange {
+  background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+}
+
+.phone-input {
+  @apply w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none;
+}
+
+.otp-input {
+  @apply w-12 h-12 text-center text-xl font-bold border-2 border-gray-300 rounded-lg focus:border-primary focus:outline-none;
+}
+
+.status-badge {
+  @apply px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.loan-card {
+  @apply bg-white rounded-xl shadow-lg border border-gray-200 p-6 hover:shadow-xl transition-shadow duration-200;
+}
+
+.dashboard-card {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+}
+
+.progress-bar {
+  @apply w-full bg-gray-200 rounded-full h-2;
+}
+
+.progress-fill {
+  @apply bg-primary h-2 rounded-full transition-all duration-300;
+}

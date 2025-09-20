@@ -1,0 +1,236 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  BORROWER
+  ADMIN
+}
+
+enum EmploymentType {
+  STUDENT
+  EMPLOYEE
+  SELF_EMPLOYED
+  UNEMPLOYED
+}
+
+enum KYCStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum LoanApplicationStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  DISBURSED
+  COMPLETED
+  CANCELLED
+}
+
+enum AgreementStatus {
+  PENDING
+  SIGNED
+  EXPIRED
+}
+
+enum DisbursementStatus {
+  PENDING
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+enum RepaymentStatus {
+  PENDING
+  PAID
+  OVERDUE
+  PARTIAL
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  email     String?  @unique
+  role      UserRole @default(BORROWER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  profile         Profile?
+  loanApplications LoanApplication[]
+  tickets         Ticket[]
+  repayments      Repayment[]
+
+  @@map("users")
+}
+
+model Profile {
+  id              String          @id @default(cuid())
+  userId          String          @unique
+  name            String
+  dateOfBirth     DateTime
+  gender          String
+  address         String
+  employmentType  EmploymentType
+  monthlyIncome   Float
+  kycStatus       KYCStatus       @default(PENDING)
+  panNumber       String?         @unique
+  aadhaarNumber   String?         @unique
+  studentId       String?
+  employeeId      String?
+  profilePhoto    String?
+  panDocument     String?
+  aadhaarDocument String?
+  incomeDocument  String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+model LoanProduct {
+  id           String  @id @default(cuid())
+  name         String
+  minAmount    Float
+  maxAmount    Float
+  interestAPR  Float
+  tenureRange  String  // JSON string like "7-90" for days
+  fees         Float   // Processing fees
+  isActive     Boolean @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  loanApplications LoanApplication[]
+
+  @@map("loan_products")
+}
+
+model LoanApplication {
+  id          String                @id @default(cuid())
+  userId      String
+  productId   String
+  amount      Float
+  tenure      Int                   // in days
+  status      LoanApplicationStatus @default(DRAFT)
+  riskScore   Float?
+  purpose     String?
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+
+  // Relations
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product     LoanProduct  @relation(fields: [productId], references: [id])
+  offer       Offer?
+  agreement   Agreement?
+  disbursement Disbursement?
+  repayments  Repayment[]
+
+  @@map("loan_applications")
+}
+
+model Offer {
+  id                String   @id @default(cuid())
+  applicationId     String   @unique
+  sanctionedAmount  Float
+  apr               Float
+  fees              Float
+  emiScheduleJson   String   // JSON string containing EMI schedule
+  validUntil        DateTime
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("offers")
+}
+
+model Agreement {
+  id            String          @id @default(cuid())
+  applicationId String          @unique
+  pdfUrl        String?
+  signedAt      DateTime?
+  status        AgreementStatus @default(PENDING)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("agreements")
+}
+
+model Disbursement {
+  id            String             @id @default(cuid())
+  applicationId String             @unique
+  amount        Float
+  status        DisbursementStatus @default(PENDING)
+  providerRef   String?            // Reference from payment provider
+  disbursedAt   DateTime?
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+
+  // Relations
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@map("disbursements")
+}
+
+model Repayment {
+  id            String         @id @default(cuid())
+  applicationId String
+  userId        String
+  dueDate       DateTime
+  amountDue     Float
+  amountPaid    Float          @default(0)
+  status        RepaymentStatus @default(PENDING)
+  lateFees      Float          @default(0)
+  paidAt        DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  application LoanApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("repayments")
+}
+
+model Ticket {
+  id        String       @id @default(cuid())
+  userId    String
+  subject   String
+  message   String
+  status    TicketStatus @default(OPEN)
+  priority  String       @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("tickets")
+}

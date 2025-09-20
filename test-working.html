@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balaji Loan - Quick Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .button { background: #3b82f6; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 10px 5px; }
+        .button:hover { background: #2563eb; }
+        .status { background: #10b981; color: white; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #ef4444; color: white; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Balaji Loan - Quick Test</h1>
+    
+    <div class="status">
+        ✅ Server is running on port 3001<br>
+        ✅ OTP system is working<br>
+        ✅ Your current OTP: <strong>938151</strong>
+    </div>
+    
+    <div class="container">
+        <h2>📱 Test Your Login</h2>
+        <p><strong>Phone:</strong> 9876543210</p>
+        <p><strong>OTP:</strong> 938151</p>
+        <a href="http://localhost:3001/working-login" class="button">Go to Login Page</a>
+    </div>
+    
+    <div class="container">
+        <h2>🔗 All Working Pages</h2>
+        <a href="http://localhost:3001/" class="button">Homepage</a>
+        <a href="http://localhost:3001/working-login" class="button">Login Page</a>
+        <a href="http://localhost:3001/working-dashboard" class="button">Dashboard</a>
+        <a href="http://localhost:3001/admin" class="button">Admin Panel</a>
+    </div>
+    
+    <div class="container">
+        <h2>📋 Quick Test Steps</h2>
+        <ol>
+            <li>Click "Go to Login Page"</li>
+            <li>Enter phone: <code>9876543210</code></li>
+            <li>Enter OTP: <code>938151</code></li>
+            <li>Click "Verify & Sign In"</li>
+            <li>You should see the dashboard!</li>
+        </ol>
+    </div>
+    
+    <script>
+        // Auto-test the API
+        fetch('http://localhost:3001/api/working-auth/send-otp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: '9876543210' })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.querySelector('.status').innerHTML = 
+                    `✅ Server is running on port 3001<br>
+                     ✅ OTP system is working<br>
+                     ✅ New OTP generated: <strong>${data.otp}</strong>`;
+            }
+        })
+        .catch(error => {
+            document.querySelector('.status').className = 'error';
+            document.querySelector('.status').innerHTML = '❌ Server connection failed';
+        });
+    </script>
+</body>
+</html>

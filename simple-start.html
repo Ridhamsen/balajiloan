@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balaji Loan - Demo Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        h1 {
+            color: #1E3A8A;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            color: #6B7280;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .features {
+            text-align: left;
+            margin: 30px 0;
+        }
+        
+        .feature {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: #F8FAFC;
+            border-radius: 10px;
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: #1E3A8A;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 15px;
+            font-size: 18px;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #F97316 0%, #FB923C 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 20px 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .secondary-button {
+            background: transparent;
+            color: #1E3A8A;
+            border: 2px solid #1E3A8A;
+        }
+        
+        .status {
+            background: #ECFDF5;
+            border: 1px solid #10B981;
+            color: #065F46;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .demo-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #F8FAFC;
+            border-radius: 15px;
+        }
+        
+        .demo-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .demo-input {
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+        }
+        
+        .demo-input:focus {
+            outline: none;
+            border-color: #1E3A8A;
+        }
+        
+        .result {
+            background: #1E3A8A;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #E5E7EB;
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">B</div>
+        <h1>Balaji Loan</h1>
+        <p class="subtitle">Quick & Easy Personal Loans</p>
+        
+        <div class="status">
+            ✅ <strong>Demo Version Running!</strong><br>
+            This is a simplified version of the Balaji Loan application.
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <div>
+                    <strong>Mobile-First Design</strong><br>
+                    <small>Optimized for all devices</small>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <div>
+                    <strong>Instant Approval</strong><br>
+                    <small>Quick loan processing</small>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <div>
+                    <strong>Secure & Safe</strong><br>
+                    <small>Bank-level security</small>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">💰</div>
+                <div>
+                    <strong>Flexible Repayment</strong><br>
+                    <small>7 days to 3 months</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h3>Loan Calculator Demo</h3>
+            <div class="demo-form">
+                <input type="number" class="demo-input" id="loanAmount" placeholder="Loan Amount (₹)" min="500" max="50000">
+                <input type="number" class="demo-input" id="tenure" placeholder="Tenure (Days)" min="7" max="90">
+                <button class="cta-button" onclick="calculateLoan()">Calculate EMI</button>
+            </div>
+            
+            <div class="result" id="result">
+                <h4>Loan Details</h4>
+                <div id="loanDetails"></div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <a href="#" class="cta-button" onclick="showFullApp()">Get Full Application</a>
+            <a href="#" class="cta-button secondary-button" onclick="showFeatures()">Learn More</a>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Balaji Loan</strong> - Making personal loans accessible, fast, and secure.</p>
+            <p>Demo version • For full features, run the complete application</p>
+        </div>
+    </div>
+
+    <script>
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const tenure = parseInt(document.getElementById('tenure').value);
+            
+            if (!amount || !tenure) {
+                alert('Please enter both loan amount and tenure');
+                return;
+            }
+            
+            if (amount < 500 || amount > 50000) {
+                alert('Loan amount must be between ₹500 and ₹50,000');
+                return;
+            }
+            
+            if (tenure < 7 || tenure > 90) {
+                alert('Tenure must be between 7 and 90 days');
+                return;
+            }
+            
+            // Simple EMI calculation (mock)
+            const interestRate = 18; // 18% APR
+            const monthlyRate = interestRate / 100 / 12;
+            const tenureMonths = tenure / 30;
+            
+            let emi;
+            if (monthlyRate === 0) {
+                emi = amount / tenureMonths;
+            } else {
+                emi = (amount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) / 
+                      (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+            }
+            
+            const totalInterest = (emi * tenureMonths) - amount;
+            const totalAmount = amount + totalInterest;
+            const processingFee = Math.min(200, amount * 0.02);
+            
+            const resultHtml = `
+                <p><strong>Principal Amount:</strong> ₹${amount.toLocaleString()}</p>
+                <p><strong>Interest Rate:</strong> ${interestRate}% APR</p>
+                <p><strong>EMI Amount:</strong> ₹${Math.round(emi).toLocaleString()}</p>
+                <p><strong>Total Interest:</strong> ₹${Math.round(totalInterest).toLocaleString()}</p>
+                <p><strong>Processing Fee:</strong> ₹${Math.round(processingFee).toLocaleString()}</p>
+                <p><strong>Total Amount:</strong> ₹${Math.round(totalAmount + processingFee).toLocaleString()}</p>
+            `;
+            
+            document.getElementById('loanDetails').innerHTML = resultHtml;
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        function showFullApp() {
+            alert('To run the full Balaji Loan application:\n\n1. Install Node.js from https://nodejs.org/\n2. Run: npm install\n3. Run: npm run dev\n4. Visit: http://localhost:3000\n\nThis demo shows the basic functionality.');
+        }
+        
+        function showFeatures() {
+            alert('Full Balaji Loan Features:\n\n• OTP-based authentication\n• Complete KYC process\n• Multi-step loan application\n• Real-time eligibility check\n• Digital agreement signing\n• Admin dashboard\n• Repayment tracking\n• Support system\n• Mobile-optimized UI');
+        }
+    </script>
+</body>
+</html>

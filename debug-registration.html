@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .step { background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .button { background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        .button:hover { background: #2563eb; }
+        .debug { background: #e5e7eb; padding: 10px; border-radius: 5px; margin: 10px 0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Registration Form</h1>
+    
+    <div class="step">
+        <h2>Step 1: Phone</h2>
+        <input type="tel" id="phone" class="input" placeholder="Enter phone number" maxlength="10">
+        <button onclick="sendOtp()" class="button">Send OTP</button>
+    </div>
+    
+    <div class="step">
+        <h2>Step 2: OTP</h2>
+        <input type="text" id="otp" class="input" placeholder="Enter OTP" maxlength="6">
+        <button onclick="verifyOtp()" class="button">Verify OTP</button>
+    </div>
+    
+    <div class="step">
+        <h2>Step 3: Personal Info</h2>
+        <input type="text" id="name" class="input" placeholder="Enter your full name">
+        <input type="email" id="email" class="input" placeholder="Enter your email">
+        <button onclick="savePersonal()" class="button">Save Personal Info</button>
+    </div>
+    
+    <div class="step">
+        <h2>Step 4: Documents</h2>
+        <input type="text" id="panCard" class="input" placeholder="Enter PAN card number" maxlength="10">
+        <input type="date" id="birthDate" class="input">
+        <button onclick="saveDocuments()" class="button">Save Documents</button>
+    </div>
+    
+    <div class="debug" id="debug">
+        <h3>Debug Info:</h3>
+        <div id="debugContent">No data yet...</div>
+    </div>
+    
+    <div class="step">
+        <h2>Final Data</h2>
+        <button onclick="showFinalData()" class="button">Show Final Data</button>
+        <div id="finalData"></div>
+    </div>
+
+    <script>
+        let registrationData = {
+            phone: '',
+            otp: '',
+            name: '',
+            email: '',
+            panCard: '',
+            birthDate: ''
+        };
+
+        function updateDebug() {
+            document.getElementById('debugContent').innerHTML = JSON.stringify(registrationData, null, 2);
+        }
+
+        function sendOtp() {
+            const phone = document.getElementById('phone').value;
+            if (phone.length === 10) {
+                registrationData.phone = phone;
+                alert('OTP sent! (Demo: 123456)');
+                updateDebug();
+            } else {
+                alert('Please enter a valid 10-digit phone number');
+            }
+        }
+
+        function verifyOtp() {
+            const otp = document.getElementById('otp').value;
+            if (otp.length === 6) {
+                registrationData.otp = otp;
+                alert('OTP verified successfully!');
+                updateDebug();
+            } else {
+                alert('Please enter a valid 6-digit OTP');
+            }
+        }
+
+        function savePersonal() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            
+            console.log('Name:', name, 'Email:', email);
+            
+            if (name && email) {
+                registrationData.name = name;
+                registrationData.email = email;
+                alert('Personal info saved!');
+                updateDebug();
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        function saveDocuments() {
+            const panCard = document.getElementById('panCard').value;
+            const birthDate = document.getElementById('birthDate').value;
+            
+            if (panCard && birthDate) {
+                registrationData.panCard = panCard.toUpperCase();
+                registrationData.birthDate = birthDate;
+                alert('Documents saved!');
+                updateDebug();
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+
+        function showFinalData() {
+            const finalData = {
+                ...registrationData,
+                id: `user_${Date.now()}`,
+                role: 'BORROWER',
+                createdAt: new Date().toISOString()
+            };
+            
+            document.getElementById('finalData').innerHTML = 
+                '<pre>' + JSON.stringify(finalData, null, 2) + '</pre>';
+            
+            // Store in localStorage
+            localStorage.setItem('balaji_user', JSON.stringify(finalData));
+            localStorage.setItem('balaji_session', `session_${Date.now()}`);
+            
+            alert('Data saved to localStorage!');
+        }
+
+        // Initialize
+        updateDebug();
+    </script>
+</body>
+</html>

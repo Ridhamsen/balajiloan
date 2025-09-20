@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Fix Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .test { background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .button { background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .button:hover { background: #2563eb; }
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .log { background: #e5e7eb; padding: 10px; border-radius: 5px; margin: 10px 0; font-family: monospace; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔧 OTP Fix Test</h1>
+    <p>This page tests if the OTP issue is fixed - it should work on the first try now.</p>
+    
+    <div class="test">
+        <h2>Step 1: Send OTP</h2>
+        <input type="tel" id="phone" class="input" placeholder="Enter phone number" value="9876543210">
+        <button onclick="sendOtp()" class="button">Send OTP</button>
+        <div id="otpResult"></div>
+    </div>
+    
+    <div class="test">
+        <h2>Step 2: Verify OTP (Multiple Times)</h2>
+        <input type="text" id="otp" class="input" placeholder="Enter OTP">
+        <button onclick="verifyOtp()" class="button">Verify OTP (1st Time)</button>
+        <button onclick="verifyOtp()" class="button">Verify OTP (2nd Time)</button>
+        <button onclick="verifyOtp()" class="button">Verify OTP (3rd Time)</button>
+        <div id="verifyResult"></div>
+    </div>
+    
+    <div class="test">
+        <h2>Step 3: Clear OTP</h2>
+        <button onclick="clearOtp()" class="button">Clear OTP</button>
+        <button onclick="verifyOtp()" class="button">Verify After Clear (Should Fail)</button>
+        <div id="clearResult"></div>
+    </div>
+    
+    <div class="log" id="log">
+        <h3>Test Log:</h3>
+        <div id="logContent">Starting test...\n</div>
+    </div>
+
+    <script>
+        let currentOtp = '';
+        
+        function log(message) {
+            const logContent = document.getElementById('logContent');
+            logContent.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+        }
+
+        async function sendOtp() {
+            const phone = document.getElementById('phone').value;
+            log('Sending OTP for phone: ' + phone);
+            
+            try {
+                const response = await fetch('/api/working-auth/send-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentOtp = data.otp;
+                    document.getElementById('otpResult').innerHTML = 
+                        '<div class="success">✅ OTP sent! OTP: ' + data.otp + '</div>';
+                    log('OTP sent successfully: ' + data.otp);
+                } else {
+                    document.getElementById('otpResult').innerHTML = 
+                        '<div class="error">❌ Failed: ' + data.message + '</div>';
+                    log('OTP send failed: ' + data.message);
+                }
+            } catch (error) {
+                document.getElementById('otpResult').innerHTML = 
+                    '<div class="error">❌ Network error: ' + error.message + '</div>';
+                log('Network error: ' + error.message);
+            }
+        }
+
+        async function verifyOtp() {
+            const phone = document.getElementById('phone').value;
+            const otp = document.getElementById('otp').value || currentOtp;
+            
+            log('Verifying OTP: ' + otp + ' for phone: ' + phone);
+            
+            try {
+                const response = await fetch('/api/working-auth/verify-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, otp })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('verifyResult').innerHTML = 
+                        '<div class="success">✅ OTP verified successfully!</div>';
+                    log('OTP verification successful');
+                } else {
+                    document.getElementById('verifyResult').innerHTML = 
+                        '<div class="error">❌ Verification failed: ' + data.message + '</div>';
+                    log('OTP verification failed: ' + data.message);
+                }
+            } catch (error) {
+                document.getElementById('verifyResult').innerHTML = 
+                    '<div class="error">❌ Network error: ' + error.message + '</div>';
+                log('Network error: ' + error.message);
+            }
+        }
+
+        async function clearOtp() {
+            const phone = document.getElementById('phone').value;
+            log('Clearing OTP for phone: ' + phone);
+            
+            try {
+                const response = await fetch('/api/working-auth/clear-otp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('clearResult').innerHTML = 
+                        '<div class="success">✅ OTP cleared successfully!</div>';
+                    log('OTP cleared successfully');
+                } else {
+                    document.getElementById('clearResult').innerHTML = 
+                        '<div class="error">❌ Clear failed: ' + data.message + '</div>';
+                    log('OTP clear failed: ' + data.message);
+                }
+            } catch (error) {
+                document.getElementById('clearResult').innerHTML = 
+                    '<div class="error">❌ Network error: ' + error.message + '</div>';
+                log('Network error: ' + error.message);
+            }
+        }
+
+        // Auto-fill OTP when received
+        document.getElementById('otp').addEventListener('input', function(e) {
+            currentOtp = e.target.value;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test All Data Collection</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test { background: #f5f5f5; padding: 20px; border-radius: 10px; margin: 20px 0; }
+        .input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+        .button { background: #3b82f6; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; margin: 5px; }
+        .button:hover { background: #2563eb; }
+        .success { background: #d4edda; color: #155724; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .error { background: #f8d7da; color: #721c24; padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .data-summary { background: #e3f2fd; border: 1px solid #2196f3; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        .field { display: flex; justify-content: space-between; margin: 8px 0; padding: 5px; background: white; border-radius: 4px; }
+        .field-label { font-weight: bold; color: #333; }
+        .field-value { color: #666; }
+    </style>
+</head>
+<body>
+    <h1>📋 Test All Data Collection</h1>
+    <p>This page tests if ALL required data is being captured properly.</p>
+    
+    <div class="test">
+        <h2>Step 1: Phone Number</h2>
+        <input type="tel" id="phone" class="input" placeholder="Enter phone number" value="9876543210" maxlength="10">
+        <button onclick="capturePhone()" class="button">Capture Phone</button>
+        <div id="phoneResult"></div>
+    </div>
+    
+    <div class="test">
+        <h2>Step 2: Full Name & Email</h2>
+        <input type="text" id="name" class="input" placeholder="Enter your full name" value="John Doe">
+        <input type="email" id="email" class="input" placeholder="Enter your email" value="john.doe@example.com">
+        <button onclick="capturePersonal()" class="button">Capture Personal Info</button>
+        <div id="personalResult"></div>
+    </div>
+    
+    <div class="test">
+        <h2>Step 3: PAN Card & Birth Date</h2>
+        <input type="text" id="panCard" class="input" placeholder="Enter PAN card number" value="ABCDE1234F" maxlength="10">
+        <input type="date" id="birthDate" class="input" value="1990-01-01">
+        <button onclick="captureDocuments()" class="button">Capture Documents</button>
+        <div id="documentsResult"></div>
+    </div>
+    
+    <div class="test">
+        <h2>Step 4: Complete Registration</h2>
+        <button onclick="completeRegistration()" class="button">Complete Registration</button>
+        <button onclick="showStoredData()" class="button">Show Stored Data</button>
+        <div id="completeResult"></div>
+    </div>
+    
+    <div class="data-summary" id="dataSummary" style="display: none;">
+        <h3>📊 Collected Data Summary:</h3>
+        <div id="summaryContent"></div>
+    </div>
+
+    <script>
+        let allData = {
+            phone: '',
+            name: '',
+            email: '',
+            panCard: '',
+            birthDate: ''
+        };
+
+        function capturePhone() {
+            const phone = document.getElementById('phone').value;
+            if (phone.length === 10) {
+                allData.phone = phone;
+                document.getElementById('phoneResult').innerHTML = 
+                    '<div class="success">✅ Phone captured: ' + phone + '</div>';
+                updateSummary();
+            } else {
+                document.getElementById('phoneResult').innerHTML = 
+                    '<div class="error">❌ Please enter a valid 10-digit phone number</div>';
+            }
+        }
+
+        function capturePersonal() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            
+            if (name && email) {
+                allData.name = name;
+                allData.email = email;
+                document.getElementById('personalResult').innerHTML = 
+                    '<div class="success">✅ Personal info captured:<br>Name: ' + name + '<br>Email: ' + email + '</div>';
+                updateSummary();
+            } else {
+                document.getElementById('personalResult').innerHTML = 
+                    '<div class="error">❌ Please fill in both name and email</div>';
+            }
+        }
+
+        function captureDocuments() {
+            const panCard = document.getElementById('panCard').value.toUpperCase();
+            const birthDate = document.getElementById('birthDate').value;
+            
+            if (panCard && birthDate) {
+                allData.panCard = panCard;
+                allData.birthDate = birthDate;
+                document.getElementById('documentsResult').innerHTML = 
+                    '<div class="success">✅ Documents captured:<br>PAN: ' + panCard + '<br>Birth Date: ' + birthDate + '</div>';
+                updateSummary();
+            } else {
+                document.getElementById('documentsResult').innerHTML = 
+                    '<div class="error">❌ Please fill in both PAN card and birth date</div>';
+            }
+        }
+
+        function completeRegistration() {
+            // Check if all data is present
+            const requiredFields = ['phone', 'name', 'email', 'panCard', 'birthDate'];
+            const missingFields = requiredFields.filter(field => !allData[field] || allData[field].trim() === '');
+            
+            if (missingFields.length > 0) {
+                document.getElementById('completeResult').innerHTML = 
+                    '<div class="error">❌ Missing required fields: ' + missingFields.join(', ') + '</div>';
+                return;
+            }
+
+            // Create complete user data
+            const completeUserData = {
+                ...allData,
+                id: `user_${Date.now()}`,
+                role: 'BORROWER',
+                createdAt: new Date().toISOString()
+            };
+
+            // Store in localStorage
+            localStorage.setItem('balaji_user', JSON.stringify(completeUserData));
+            localStorage.setItem('balaji_session', `session_${Date.now()}`);
+
+            document.getElementById('completeResult').innerHTML = 
+                '<div class="success">✅ Registration completed successfully!<br>All data saved to localStorage.</div>';
+            
+            updateSummary();
+        }
+
+        function showStoredData() {
+            const storedData = localStorage.getItem('balaji_user');
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                document.getElementById('completeResult').innerHTML = 
+                    '<div class="success">✅ Data found in localStorage:<br><pre>' + JSON.stringify(data, null, 2) + '</pre></div>';
+            } else {
+                document.getElementById('completeResult').innerHTML = 
+                    '<div class="error">❌ No data found in localStorage</div>';
+            }
+        }
+
+        function updateSummary() {
+            const summaryContent = document.getElementById('summaryContent');
+            summaryContent.innerHTML = '';
+            
+            Object.entries(allData).forEach(([key, value]) => {
+                if (value) {
+                    const fieldDiv = document.createElement('div');
+                    fieldDiv.className = 'field';
+                    fieldDiv.innerHTML = `
+                        <span class="field-label">${key.charAt(0).toUpperCase() + key.slice(1)}:</span>
+                        <span class="field-value">${value}</span>
+                    `;
+                    summaryContent.appendChild(fieldDiv);
+                }
+            });
+            
+            document.getElementById('dataSummary').style.display = 'block';
+        }
+
+        // Initialize
+        updateSummary();
+    </script>
+</body>
+</html>
